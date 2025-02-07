@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>Rich & Playful Loader</title>
+  <title>Dynamic Bubbles Loader</title>
   <style>
     /* 全体のリセット */
     * {
@@ -17,85 +17,191 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background: linear-gradient(135deg, #e09, #d0e);
+      /* 背景はコントラストを出しつつ、ややグラデーション */
+      background: radial-gradient(circle, #ff9a9e, #fad0c4);
     }
 
-    /* ローディングの背景を少し透過させつつ、中央配置 */
+    /* ローダーを中央に置くためのコンテナ */
     .loader-container {
       position: relative;
-      width: 150px;
-      height: 150px;
+      width: 180px;
+      height: 180px;
       background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(4px);
-      border-radius: 15px;
+      backdrop-filter: blur(6px);
+      border-radius: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
-    /* バブルのラッパ。複数のバブルをまとめる */
+    /* バブル全体をまとめる要素 */
     .bubbles {
       position: relative;
-      width: 100px;
-      height: 100px;
+      width: 130px;
+      height: 130px;
     }
 
-    /* バブルの基本スタイル */
+    /* 個々のバブル */
     .bubble {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 30px;
-      height: 30px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
-      opacity: 0.8;
+      opacity: 0.85;
       transform: translate(-50%, -50%);
-      animation: float 3s ease-in-out infinite;
+      /* 今回はscaleを大きくし、移動や回転も加えるアニメーションを適用 */
     }
 
-    /* バブルごとに色やアニメーションタイミングを少しずつ変えて、
-       遊び心を出す */
+    /* バブルの色を何パターンか用意 */
     .bubble:nth-child(1) {
       background: radial-gradient(circle, #ffafbd, #ffc3a0);
-      animation-delay: 0s;
+      animation: bubbleAnim1 3s ease-in-out infinite;
     }
     .bubble:nth-child(2) {
       background: radial-gradient(circle, #2196f3, #6dd5ed);
-      animation-delay: 0.5s;
+      animation: bubbleAnim2 4s ease-in-out infinite;
     }
     .bubble:nth-child(3) {
       background: radial-gradient(circle, #cc2b5e, #753a88);
-      animation-delay: 1s;
+      animation: bubbleAnim3 3.5s ease-in-out infinite;
     }
     .bubble:nth-child(4) {
       background: radial-gradient(circle, #ee9ca7, #ffdde1);
-      animation-delay: 1.5s;
+      animation: bubbleAnim4 5s ease-in-out infinite;
     }
     .bubble:nth-child(5) {
       background: radial-gradient(circle, #fbc2eb, #a6c1ee);
-      animation-delay: 2s;
+      animation: bubbleAnim5 3.8s ease-in-out infinite;
+    }
+    .bubble:nth-child(6) {
+      background: radial-gradient(circle, #84fab0, #8fd3f4);
+      animation: bubbleAnim6 4.2s ease-in-out infinite;
     }
 
-    /* バブルが拡大縮小を繰り返し、位置もわずかにランダムに移動 */
-    @keyframes float {
+    /*
+      それぞれ微妙に違うタイミング・動きにするために
+      アニメーションを複数作成し、バブルごとに割り当てています。
+      大きく移動・回転・スケールが変化するように設定。
+    */
+
+    @keyframes bubbleAnim1 {
       0% {
-        transform: translate(-50%, -50%) scale(0.8);
+        transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+      }
+      25% {
+        transform: translate(-30%, -70%) scale(1.4) rotate(45deg);
       }
       50% {
-        transform: translate(
-          calc(-50% + (randomPosX())),
-          calc(-50% + (randomPosY()))
-        ) scale(1.2);
+        transform: translate(-50%, -90%) scale(1) rotate(90deg);
+      }
+      75% {
+        transform: translate(-70%, -70%) scale(1.5) rotate(135deg);
       }
       100% {
-        transform: translate(-50%, -50%) scale(0.8);
+        transform: translate(-50%, -50%) scale(0.6) rotate(180deg);
       }
     }
+
+    @keyframes bubbleAnim2 {
+      0% {
+        transform: translate(-50%, -50%) scale(0.7) rotate(0deg);
+      }
+      25% {
+        transform: translate(-60%, -40%) scale(1.3) rotate(90deg);
+      }
+      50% {
+        transform: translate(-50%, -30%) scale(1.1) rotate(135deg);
+      }
+      75% {
+        transform: translate(-40%, -60%) scale(1.5) rotate(180deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.7) rotate(270deg);
+      }
+    }
+
+    @keyframes bubbleAnim3 {
+      0% {
+        transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+      }
+      25% {
+        transform: translate(-70%, -30%) scale(1.2) rotate(60deg);
+      }
+      50% {
+        transform: translate(-30%, -40%) scale(0.8) rotate(120deg);
+      }
+      75% {
+        transform: translate(-50%, -70%) scale(1.4) rotate(240deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.6) rotate(360deg);
+      }
+    }
+
+    @keyframes bubbleAnim4 {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+      }
+      25% {
+        transform: translate(-40%, -80%) scale(1.5) rotate(120deg);
+      }
+      50% {
+        transform: translate(-60%, -40%) scale(0.9) rotate(180deg);
+      }
+      75% {
+        transform: translate(-45%, -30%) scale(1.6) rotate(240deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8) rotate(360deg);
+      }
+    }
+
+    @keyframes bubbleAnim5 {
+      0% {
+        transform: translate(-50%, -50%) scale(0.7) rotate(0deg);
+      }
+      25% {
+        transform: translate(-70%, -70%) scale(1.4) rotate(100deg);
+      }
+      50% {
+        transform: translate(-50%, -30%) scale(1) rotate(200deg);
+      }
+      75% {
+        transform: translate(-30%, -70%) scale(1.5) rotate(300deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.7) rotate(360deg);
+      }
+    }
+
+    @keyframes bubbleAnim6 {
+      0% {
+        transform: translate(-50%, -50%) scale(0.9) rotate(0deg);
+      }
+      25% {
+        transform: translate(-30%, -60%) scale(1.3) rotate(80deg);
+      }
+      50% {
+        transform: translate(-60%, -70%) scale(1) rotate(160deg);
+      }
+      75% {
+        transform: translate(-70%, -40%) scale(1.6) rotate(240deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.9) rotate(360deg);
+      }
+    }
+
   </style>
 </head>
 <body>
   <div class="loader-container">
     <div class="bubbles">
+      <!-- バブルを増やしたい場合は要素を追加するだけでOK -->
+      <div class="bubble"></div>
       <div class="bubble"></div>
       <div class="bubble"></div>
       <div class="bubble"></div>
@@ -103,63 +209,5 @@
       <div class="bubble"></div>
     </div>
   </div>
-
-  <script>
-    /* 
-      ランダムな位置の変化（px）を返す関数を JS で用意して、
-      カスタムプロパティとして CSS 側に渡すサンプル。
-      ここでは例えば -10px ~ 10px くらいの範囲に動くようにしている。
-      ただし、keyframes 内で 'calc(...)' をそのまま動的に書き換えることは難しいので、
-      実運用では Sass の mixin など使って生成する方が楽です。
-      ここではサンプルとして、インラインスタイルなどを動的にセットしています。
-    */
-
-    // bubble 要素をすべて取得
-    const bubbles = document.querySelectorAll('.bubble');
-
-    // ランダム位置を返す関数
-    function randomOffset(range) {
-      const value = Math.random() * range * 2 - range; // -range ～ +range の値
-      return `${value}px`;
-    }
-
-    // 各バブルに対してランダム値を注入
-    bubbles.forEach((bubble, index) => {
-      // 任意のカスタムデータをセット（今回は data-offsetX, data-offsetY に格納）
-      bubble.dataset.offsetX = randomOffset(15);
-      bubble.dataset.offsetY = randomOffset(15);
-    });
-
-    // 生成したカスタムデータを使って inline-style で keyframes を模倣する
-    // 実際にはグレイスケールなやり方なので、より洗練した方法としては
-    // サーバーサイドやコンパイラで生成するなどが望ましい
-    bubbles.forEach((bubble) => {
-      const offsetX = bubble.dataset.offsetX;
-      const offsetY = bubble.dataset.offsetY;
-
-      bubble.style.animationName = '';
-      const styleSheet = document.createElement('style');
-      styleSheet.textContent = `
-        @keyframes float-${offsetX}-${offsetY} {
-          0% {
-            transform: translate(-50%, -50%) scale(0.8);
-          }
-          50% {
-            transform: translate(
-              calc(-50% + ${offsetX}),
-              calc(-50% + ${offsetY})
-            ) scale(1.2);
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(0.8);
-          }
-        }
-      `;
-      document.head.appendChild(styleSheet);
-
-      // 上で生成したカスタム keyframes を割り当てる
-      bubble.style.animationName = `float-${offsetX}-${offsetY}`;
-    });
-  </script>
 </body>
 </html>
