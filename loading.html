@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rich & Playful Loader</title>
+  <style>
+    /* 全体のリセット */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #e09, #d0e);
+    }
+
+    /* ローディングの背景を少し透過させつつ、中央配置 */
+    .loader-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* バブルのラッパ。複数のバブルをまとめる */
+    .bubbles {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+
+    /* バブルの基本スタイル */
+    .bubble {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      opacity: 0.8;
+      transform: translate(-50%, -50%);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* バブルごとに色やアニメーションタイミングを少しずつ変えて、
+       遊び心を出す */
+    .bubble:nth-child(1) {
+      background: radial-gradient(circle, #ffafbd, #ffc3a0);
+      animation-delay: 0s;
+    }
+    .bubble:nth-child(2) {
+      background: radial-gradient(circle, #2196f3, #6dd5ed);
+      animation-delay: 0.5s;
+    }
+    .bubble:nth-child(3) {
+      background: radial-gradient(circle, #cc2b5e, #753a88);
+      animation-delay: 1s;
+    }
+    .bubble:nth-child(4) {
+      background: radial-gradient(circle, #ee9ca7, #ffdde1);
+      animation-delay: 1.5s;
+    }
+    .bubble:nth-child(5) {
+      background: radial-gradient(circle, #fbc2eb, #a6c1ee);
+      animation-delay: 2s;
+    }
+
+    /* バブルが拡大縮小を繰り返し、位置もわずかにランダムに移動 */
+    @keyframes float {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      50% {
+        transform: translate(
+          calc(-50% + (randomPosX())),
+          calc(-50% + (randomPosY()))
+        ) scale(1.2);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader-container">
+    <div class="bubbles">
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+  </div>
+
+  <script>
+    /* 
+      ランダムな位置の変化（px）を返す関数を JS で用意して、
+      カスタムプロパティとして CSS 側に渡すサンプル。
+      ここでは例えば -10px ~ 10px くらいの範囲に動くようにしている。
+      ただし、keyframes 内で 'calc(...)' をそのまま動的に書き換えることは難しいので、
+      実運用では Sass の mixin など使って生成する方が楽です。
+      ここではサンプルとして、インラインスタイルなどを動的にセットしています。
+    */
+
+    // bubble 要素をすべて取得
+    const bubbles = document.querySelectorAll('.bubble');
+
+    // ランダム位置を返す関数
+    function randomOffset(range) {
+      const value = Math.random() * range * 2 - range; // -range ～ +range の値
+      return `${value}px`;
+    }
+
+    // 各バブルに対してランダム値を注入
+    bubbles.forEach((bubble, index) => {
+      // 任意のカスタムデータをセット（今回は data-offsetX, data-offsetY に格納）
+      bubble.dataset.offsetX = randomOffset(15);
+      bubble.dataset.offsetY = randomOffset(15);
+    });
+
+    // 生成したカスタムデータを使って inline-style で keyframes を模倣する
+    // 実際にはグレイスケールなやり方なので、より洗練した方法としては
+    // サーバーサイドやコンパイラで生成するなどが望ましい
+    bubbles.forEach((bubble) => {
+      const offsetX = bubble.dataset.offsetX;
+      const offsetY = bubble.dataset.offsetY;
+
+      bubble.style.animationName = '';
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = `
+        @keyframes float-${offsetX}-${offsetY} {
+          0% {
+            transform: translate(-50%, -50%) scale(0.8);
+          }
+          50% {
+            transform: translate(
+              calc(-50% + ${offsetX}),
+              calc(-50% + ${offsetY})
+            ) scale(1.2);
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(0.8);
+          }
+        }
+      `;
+      document.head.appendChild(styleSheet);
+
+      // 上で生成したカスタム keyframes を割り当てる
+      bubble.style.animationName = `float-${offsetX}-${offsetY}`;
+    });
+  </script>
+</body>
+</html>
