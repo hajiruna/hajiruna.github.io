@@ -6,10 +6,10 @@
     "configurations": [
         
         {
-            "type": "chrome",
+            "type": "msedge",
             "request": "launch",
-            "name": "localhost に対して Chrome を起動する",
-            "url": "http://localhost:8080",
+            "name": "opnen index.html",
+            "url": "http://localhost:5500",
             "webRoot": "${workspaceFolder}"
         }
     ]
